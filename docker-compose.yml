@@ -1,0 +1,36 @@
+version: "3.2"
+services:
+  elasticsearch:
+    image: elasticsearch:7.10.1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      discovery.type: single-node
+
+  kibana:
+    image: kibana:7.10.1
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+
+  filebeat:
+    image: elastic/filebeat:7.10.1
+    depends_on:
+      - elasticsearch
+      - kibana
+    links:
+      - elasticsearch
+      - kibana
+    volumes:
+      - type: bind
+        source: ./filebeat.yml
+        target: /usr/share/filebeat/filebeat.yml
+        read_only: true
+      - type: bind
+        source: /home/kforget/Bureau/hub-decathlon/logs/
+        target: /usr/share/filebeat/tapiriik-log/
+        read_only: false

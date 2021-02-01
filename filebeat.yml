@@ -1,0 +1,15 @@
+filebeat.inputs:
+  - type: log
+    enabled: false
+    path:
+      - "/usr/share/filebeat/tapiriik-log/log_global.log"
+
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+setup.kibana:
+  host: 'kibana:5601'
+
+output.elasticsearch:
+  hosts: 'elasticsearch:9200'
